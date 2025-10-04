@@ -14,6 +14,7 @@
         .main-section.active { display: block; }
     </style>
 </head>
+
 <body class="body-pd" id="body-pd">
 
     <!-- Header -->
@@ -40,17 +41,21 @@
                     <span class="nav_name">Profil</span>
                 </a>
                 <a href="#" class="nav_link" data-target="categorie">
-                    <i class='bx bx-grid-alt nav_icon'></i>
+                    <i class='bx bx-folder nav_icon'></i>
                     <span class="nav_name">Catégories</span>
                 </a>
                 <a href="#" class="nav_link" data-target="operations">
                     <i class='bx bx-transfer nav_icon'></i>
                     <span class="nav_name">Opérations</span>
                 </a>
+                <a href="#" class="nav_link" data-target="dashboard">
+                    <i class='bx bx-grid-alt nav_icon'></i>
+                    <span class="nav_name">Dashboard</span>
+                </a>
                 <a href="#" class="nav_link btn-logout">
-    <i class='bx bx-log-out nav_icon'></i>
-    <span class="nav_name">Se déconnecter</span>
-</a>
+                    <i class='bx bx-log-out nav_icon'></i>
+                    <span class="nav_name">Se déconnecter</span>
+                </a>
 
 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
     @csrf
@@ -76,16 +81,19 @@
         <div id="operations" class="main-section">
             @include('pageUtilisateur.operation')
         </div>
+        <div id="dashboard" class="main-section">
+            @include('pageUtilisateur.dashboard')
+        </div>
 
     </div>
-
+    
     @include('pageUtilisateur.script')
     @include('message_erreur_sweet_alert')
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     const links = document.querySelectorAll('.nav_link[data-target]');
     const sections = document.querySelectorAll('.main-section');
 

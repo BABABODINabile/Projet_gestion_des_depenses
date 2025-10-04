@@ -15,10 +15,9 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         $validated = $request->validated();
+        $validated['description'] = $validated['description'] ?? 'Aucune description';
         $validated['user_id'] = Auth::id();
-
         Category::create($validated);
-
         return redirect()->back()
             ->with('success', 'Catégorie créée avec succès')
             ->with('active_tab', 'categorie'); // Onglet actif
@@ -30,8 +29,9 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         $validated = $request->validated();
+        $validated['description'] = $validated['description'] ?? 'Aucune description';
         $category->update($validated);
-
+        
         return redirect()->back()
             ->with('success', 'Catégorie modifiée avec succès')
             ->with('active_tab', 'categorie'); // Onglet actif

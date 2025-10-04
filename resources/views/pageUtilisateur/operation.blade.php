@@ -132,6 +132,15 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
+                    @if ($errors->storeoperation->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->storeoperation->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 <form action="{{route('store.operation')}}" method="POST" >
                     @csrf
                     <div class="mb-3">
@@ -168,6 +177,7 @@
             <th>Description</th>
             <th>Montant</th>
             <th>Date & heure</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -177,6 +187,49 @@
             <td>{{ $operation->description }}</td>
             <td>{{ $operation->montant }}</td>
             <td>{{ $operation->updated_at->format('d/m/Y H:i') }}</td>
+            <td><button type="button" data-bs-toggle="modal" class="btn btn-sm btn-outline-primary" aria-label="Modifier l'élément" data-bs-target="#formModal2{{ $operation->id }}" style="margin-right: 10px"><i class="fas fa-edit"></i></button>
+                <!-- Modal2-->
+        <div class="modal fade" id="formModal2{{ $operation->id }}" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="formModalLabel">Modifier l'opération'</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                <form action="{{route('update.operation',$operation->id)}}" method="POST" >
+                    @csrf
+                    @method('put')
+                    <div class="mb-3">
+                    <label for="category_id" class="form-label">Categorie :</label>
+                    <select name="category_id" id="category_id" class="form-control">
+                        @foreach ($user->categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->nom }}</option>
+                        @endforeach
+                    </select>
+                    
+                    </div>
+                    <div class="mb-3">
+                    <label for="mmontant" class="form-label">Montant :</label>
+                    <input type="text" class="form-control" id="montant" name="montant" value="{{ $operation->montant }}" required>
+                    </div>
+                    <div class="mb-3">
+                    <label for="description" class="form-label">Description :</label>
+                    <textarea name="description" id="description" class="form-control" cols="30" rows="10">{{ $operation->description }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-orange w-100">Enregistrer</button>
+                </form>
+                </div>
+            </div>
+            </div>
+            </div>
+
+                        <form action="{{ route('destroy.operation',$operation->id)}}" method="POST" id="delete-form-{{ $operation->id }}" style="display:inline;">
+                            @method('delete')
+                            @csrf
+                        </form>
+                        <button type="button" class="btn btn-sm btn-outline-danger btn-delete" aria-label="Supprimer l'élément" data-id="{{ $operation->id }}"><i class="fas fa-trash-alt"></i></button>
+            </td>
         </tr>
         @endforeach
     </tbody>
@@ -246,7 +299,10 @@ $(document).ready(function() {
             {
                 extend: 'print',
                 text: 'Imprimer',
-                className: 'btn btn-primary'
+                className: 'btn btn-primary',
+                exportOptions: {
+                    columns: ':not(:last-child)'
+                }
             },
             {
                 extend: 'colvis',
@@ -258,3 +314,30 @@ $(document).ready(function() {
 });
 
 </script>
+@if ($errors->storeoperation->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = new bootstrap.Modal(document.getElementById('formModalO'));
+            modal.show();
+        });
+    </script>
+@endif
+
+@if ($errors->updateoperation->any())
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur de validation',
+                html: `
+                    <ul style="text-align:left;color:red">
+                        @foreach ($errors->updateoperation->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                `,
+                confirmButtonText: "Ok"
+            })
+        });
+    </script>
+@endif

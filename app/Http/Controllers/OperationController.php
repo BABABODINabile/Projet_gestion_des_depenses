@@ -16,8 +16,8 @@ class OperationController extends Controller
     {
         $validated = $request->validated();
         $validated['user_id'] = Auth::id(); // si tu veux lier l'opération à l'utilisateur
-
-        Operation::create($validated); 
+        $validated['description'] = $validated['description'] ?? 'Aucune description';
+        Operation::create($validated);
         return redirect()->back()
             ->with('success', 'Opération ajoutée avec succès')
             ->with('active_tab', 'operations');
@@ -29,6 +29,8 @@ class OperationController extends Controller
     public function update(UpdateOperationRequest $request, Operation $operation)
     {
         $validated = $request->validated();
+        $validated['user_id'] = Auth::id(); // si tu veux lier l'opération à l'utilisateur
+        $validated['description'] = $validated['description'] ?? 'Aucune description';
         $operation->update($validated);
 
         return redirect()->back()
@@ -42,7 +44,6 @@ class OperationController extends Controller
     public function destroy(Operation $operation)
     {
         $operation->delete();
-
         return redirect()->back()
             ->with('success', 'Opération supprimée avec succès')
             ->with('active_tab', 'operations');

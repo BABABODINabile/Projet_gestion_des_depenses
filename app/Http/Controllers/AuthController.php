@@ -25,8 +25,13 @@ class AuthController extends Controller
        $user = Auth::user()->load('categories');
        $operations = Operation::with('category')->where('user_id', $user->id)->get();
        //dd($operations);
-       return view('pageUtilisateur.index',compact('user','operations'));
-        
+       if($user->isAdmin==0){
+        return view('pageUtilisateur.index',compact('user','operations'));
+       }
+       else if($user->isAdmin==1){
+        return view('adminDashboard.index',compact('user','operations'));
+       }
+    
     }
     public function profil(){
        return view('pageUtilisateur.profil');
@@ -40,6 +45,7 @@ class AuthController extends Controller
         $request->session()->regenerateToken(); // Nouveau token CSRF
         return redirect()->route('inscription')->with('success', 'Vous êtes déconnecté.');
     }
+    
 
 
 }

@@ -1,8 +1,6 @@
-    
-    
     <div class="d-flex justify-content-end mb-3" style="margin-top: 50px">
         <!-- Bouton qui ouvre le modal de création de catégorie-->
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#formModal">Ajouter une catégorie</button>
+        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#formModal" style="font-weight: bolder">Ajouter une catégorie</button>
     </div>
 
         @if($user->categories->isNotEmpty())
@@ -26,18 +24,19 @@
                     <td> {{ $category->nom }}</td>
                     <td> {{ $category->description }}</td>
                     <td>
-                        <button type="button" data-bs-toggle="modal" class="icon-button edit-button" aria-label="Modifier l'élément" data-bs-target="#formModal1"><i class="fas fa-edit"></i></button>
+                        <button type="button" data-bs-toggle="modal" class="btn btn-sm btn-outline-primary" aria-label="Modifier l'élément" data-bs-target="#formModal1{{ $category->id }}" style="margin-right: 10px"><i class="fas fa-edit"></i></button>
                         <form action="{{ route('destroy.category',$category->id)}}" method="POST" id="delete-form-{{ $category->id }}" style="display:inline;">
                             @method('delete')
                             @csrf
                         </form>
-                        <button type="button" class="icon-button delete-button btn-delete-cascade" aria-label="Supprimer l'élément" data-id="{{ $category->id }}"><i class="fas fa-trash-alt"></i></button>
+                        <button type="button" class="btn btn-sm btn-outline-danger btn-delete-cascade" aria-label="Supprimer l'élément" data-id="{{ $category->id }}"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
                    
-                @endforeach
-                                 <!-- Modal1-->
-        <div class="modal fade" id="formModal1" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+
+
+                     <!-- Modal1-->
+        <div class="modal fade" id="formModal1{{ $category->id }}" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow-lg rounded-4">
                 <div class="modal-header bg-dark text-white">
@@ -72,6 +71,9 @@
             </div>
             </div>
 
+                @endforeach
+                         
+                       
                 
                            
             </tbody>
@@ -94,6 +96,15 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
+                    @if ($errors->storecategorie->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->storecategorie->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 <form action="{{route('store.category')}}" method="POST" >
                     @csrf
                     <div class="mb-3">
@@ -111,7 +122,7 @@
                     </div>
                     <div class="mb-3">
                     <label for="description" class="form-label">Description :</label>
-                    <textarea name="description" id="description" class="form-control" cols="30" rows="10"></textarea>
+                    <textarea name="description" id="description" class="form-control" cols="30" rows="10" ></textarea>
                     </div>
                     <button type="submit" class="btn btn-orange w-100">Enregistrer</button>
                 </form>
@@ -120,4 +131,35 @@
             </div>
             </div>
 
+
+
+@if ($errors->storecategorie->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var modal = new bootstrap.Modal(document.getElementById('formModal'));
+            modal.show();
+        });
+    </script>
+@endif
+
+
+
+@if ($errors->updatecategorie->any())
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur de validation',
+                html: `
+                    <ul style="text-align:left;color:red">
+                        @foreach ($errors->updatecategorie->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                `,
+                confirmButtonText: "Ok"
+            })
+        });
+    </script>
+@endif
 

@@ -87,6 +87,7 @@ a {
     z-index: var(--z-fixed);
 }
 
+
 .nav {
     height: 100%;
     display: flex;
@@ -121,12 +122,16 @@ a {
 .nav_link {
     position: relative;
     color: var(--first-color-light);
+    text-decoration: none;
     margin-bottom: 1.5rem;
     transition: .3s;
 }
 
-.nav_link:hover {
+.nav_link:hover{
     color: var(--white-color);
+    background-color: white;
+    color: #FF4B2B;
+
 }
 
 .nav_icon {
@@ -142,16 +147,26 @@ a {
     padding-left: calc(var(--nav-width) + 1rem);
 }
 
-.active {
+.active{
 }
 
-.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    width: 2px;
-    height: 32px;
-    background-color: var(--white-color);
+.nav_link.active {
+  background-color: white;  /* fond blanc */
+  color: #FF4B2B;           /* texte orange */
+  font-weight: bold;
+}
+
+/* Barre verticale gauche */
+.nav_link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%); /* centrer verticalement */
+  width: 5px;
+  height: 60%;                 /* adapte la hauteur */
+  background-color: black;   /* orange */
+  border-radius: 3px;
 }
 
 .height-100 {
@@ -214,10 +229,45 @@ body{
     margin-right: .5rem!important;
 }
 
+
+
+/* Classe pour imiter form-control avec style personnalisé */
+.custom-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem; /* padding similaire à form-control */
+    font-size: 1.07em;        /* taille texte de ta charte */
+    font-family: 'Nunito', 'Montserrat', Arial, sans-serif;
+    border-radius: 10px;       /* arrondi personnalisé */
+    border: 1px solid #FF4B2B; /* couleur bordure charte */
+    background-color: #fff;    /* fond blanc */
+    color: #000;               /* texte noir */
+    transition: border-color 0.3s, box-shadow 0.3s; /* effet focus */ 
+    font-weight: 600;
+}
+
+.custom-input:focus {
+    outline: none;
+    border-color: #FF4B2B;        /* accent sur focus */
+    box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.2);
+}
+
+/* Hover bouton */
+.form-container button:hover {
+  background: #c1121f; /* rouge foncé */
+  transform: translateY(-2px);
+}
+
 .princip1 {
   display: grid;
   place-items: center;   /* centre horizontalement et verticalement */
   height: 100vh;
+}
+.prin{
+  background: #f8f9fa; /* fond doux */
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,2);
+  font-family: 'Nunito', 'Montserrat', Arial, sans-serif;
 }
 /* Arrière-plan du modal */
     .modal {
@@ -311,5 +361,46 @@ body{
     color: #e74c3c;
     font-size: 20px;
 }
+.custom-file-label {
+	display: flex !important;
+	align-items: center;
+	gap: 12px;
+	background: linear-gradient(90deg, #fff 80%, #ffe5e0 100%);
+	border: 2px solid #FF4B2B;
+	border-radius: 12px;
+	color: #FF4B2B;
+	font-weight: 600;
+	font-size: 16px;
+	box-shadow: 0 2px 8px rgba(255,75,43,0.10);
+	cursor: pointer;
+	padding: 14px 18px;
+	transition: box-shadow 0.2s, border-color 0.2s, background 0.2s, color 0.2s;
+	position: relative;
+	z-index: 1;
+}
+.custom-file-label::before {
+	
+	font-family: 'FontAwesome';
+	font-size: 20px;
+	color: #fff;
+	background: #FF4B2B;
+	border-radius: 50%;
+	width: 36px;
+	height: 36px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 8px rgba(255,75,43,0.15);
+	margin-right: 8px;
+}
+.custom-file-label.selected {
+	color: #333;
+	background: linear-gradient(90deg, #fff 80%, #ffe5e0 100%);
+}
+.custom-file-label:hover, .custom-file-label:focus {
+	border-color: #FF4B2B;
+	box-shadow: 0 4px 16px rgba(255,65,108,0.18);
+	background: #fff0ed;
+	color:  #FF4B2B;
 
 </style>

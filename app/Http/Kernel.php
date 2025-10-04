@@ -68,6 +68,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
     // ...
     'inject.user' => \App\Http\Middleware\InjectUserId::class,
+    'check.banned' => \App\Http\Middleware\EnsureUserIsNotBanned::class,
     ];
 
 }
