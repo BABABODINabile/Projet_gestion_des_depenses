@@ -14,7 +14,7 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         //
-        $user = User::find(3); // l'utilisateur connu
+        $user = User::find(1); // l'utilisateur connu
         $categories = [
             ['type' => 'Revenu', 'nom' => 'Salaire', 'description' => 'Rémunération du travail'],
             ['type' => 'Revenu', 'nom' => 'Investissement', 'description' => 'Revenus des placements financiers'],

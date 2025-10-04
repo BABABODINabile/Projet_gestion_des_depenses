@@ -5,8 +5,8 @@
 
     $total_revenus = Operation::whereHas('category', fn($q) => $q->where('type', 'Revenu'))->sum('montant');
     $total_depenses = Operation::whereHas('category', fn($q) => $q->where('type', 'Dépense'))->sum('montant');
-    $solde_actuel = $total_revenus - $total_depenses;
     $nombre_operations = Operation::count();
+    $nombre_utilisateurs = \App\Models\User::where('isAdmin', 0)->where('isBlocked', 0)->count();
     $users=\App\Models\User::all();
     // Dernières opérations
     $dernieres_operations = Operation::with('user', 'category')
@@ -75,11 +75,11 @@ $colors_categories = generateDistinctColors($categories->count());
             <div class="card radius-10 border-start border-0 border-3 border-success">
                 <div class="card-body d-flex align-items-center">
                     <div>
-                        <p class="mb-0 text-secondary">Solde Actuel</p>
-                        <h4 class="my-1 text-success">{{ $solde_actuel }} FCFA</h4>
+                        <p class="mb-0 text-secondary">Utilisateurs actifs</p>
+                        <h4 class="my-1 text-success">{{ $nombre_utilisateurs }} utilisateurs</h4>
                     </div>
                     <div class="widgets-icons-2 rounded-circle bg-gradient-ohhappiness text-white ms-auto">
-                        <i class="fas fa-wallet"></i>
+                        <i class="fas fa-users"></i>
                     </div>
                 </div>
             </div>
@@ -204,12 +204,18 @@ $colors_categories = generateDistinctColors($categories->count());
                             @endif
                         </td>
                         <td>
-                            <form action="{{ route($user->isBlocked ? 'users.unblock' : 'users.block', $user->id) }}" method="POST" style="display:inline;">
+                            <form id="block-form-{{ $user->id }}" action="{{ route($user->isBlocked ? 'users.unblock' : 'users.block', $user->id) }}" method="POST" style="display:inline;">
                                 @csrf
-                                <button type="submit" class="btn btn-sm {{ $user->isBlocked ? 'btn-success' : 'btn-danger' }}" 
-                                    onclick="return confirm('Êtes-vous sûr de vouloir {{ $user->isBlocked ? 'débloquer' : 'bloquer' }} cet utilisateur ?')">
+    
+                                <button type="submit" 
+                                        class="btn btn-sm {{ $user->isBlocked ? 'btn-success' : 'btn-danger' }}" 
+                                        
+                                        {{-- On utilise l'ID du formulaire pour l'identifier --}}
+                                        onclick="confirmBlockAction(event, '{{ $user->id }}', '{{ $user->isBlocked ? 'débloquer' : 'bloquer' }}')"> 
+                                        
                                     {{ $user->isBlocked ? 'Débloquer' : 'Bloquer' }}
                                 </button>
+
                             </form>
                         </td>
                     </tr>
@@ -221,3 +227,32 @@ $colors_categories = generateDistinctColors($categories->count());
 </div>
 @include('message_erreur_sweet_alert')
 @include('adminDashboard.script')
+<script>
+    function confirmBlockAction(event, userId, action) {
+        // Empêche la soumission immédiate du formulaire
+        event.preventDefault(); 
+        
+        // Détermine le texte et l'icône
+        const titleText = `Voulez-vous vraiment ${action} cet utilisateur ?`;
+        const confirmButtonText = action.charAt(0).toUpperCase() + action.slice(1); // Débloquer / Bloquer
+        const icon = (action === 'bloquer') ? 'warning' : 'question';
+        const formId = `block-form-${userId}`;
+
+        Swal.fire({
+            title: titleText,
+            text: "Cette action est irréversible (sauf par une action contraire).",
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: confirmButtonText,
+            cancelButtonText: 'Annuler'
+        }).then((result) => {
+            // Si l'utilisateur clique sur le bouton de confirmation
+            if (result.isConfirmed) {
+                // Soumet le formulaire par son ID
+                document.getElementById(formId).submit();
+            }
+        });
+    }
+</script>

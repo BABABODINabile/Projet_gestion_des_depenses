@@ -16,7 +16,7 @@ class OperationSeeder extends Seeder
     public function run(): void
     {
         //
-        $user = User::find(3); // utilisateur connu
+        $user = User::find(1); // utilisateur connu
         $categories = Category::where('user_id', $user->id)->get(); // récupérer toutes les catégories
 
         for ($i = 0; $i < 50; $i++) {

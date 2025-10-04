@@ -128,7 +128,7 @@
             <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content shadow-lg rounded-4">
                 <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="formModalLabel">Nouvelle catégorie</h5>
+                <h5 class="modal-title" id="formModalLabel">Nouvelle opération</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
